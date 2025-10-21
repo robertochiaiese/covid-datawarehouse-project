@@ -2,21 +2,23 @@
  File: 01_create_database_structure.sql
  Author: Roberto Chiaiese
  Description:
-   This script creates the core database and schema structure for the CovidReporting 
-   Data Warehouse project. It follows the Medallion Architecture model, which organizes 
-   data into three layers for efficient transformation and analysis:
-     • Bronze Layer – Raw data ingestion
-     • Silver Layer – Cleaned and transformed data
-     • Gold Layer – Curated, analytics-ready data
+   This script initializes the main database and schema structure for the CovidReporting 
+   Data Warehouse project. It defines the fundamental layers required for the ETL workflow, 
+   following a simplified Medallion-style architecture with dedicated zones for raw and 
+   transformed data.
+
+   The database includes:
+     • Staging Layer – Raw data ingestion area used for initial loading from external sources
+     • Core Layer – Cleaned and standardized data prepared for analytical modeling
 
  Steps:
-   1. Drop existing CovidReporting database if it exists
+   1. Drop the existing CovidReporting database if it exists
    2. Create a new CovidReporting database
-   3. Define the Medallion Architecture schemas (bronze, silver, gold)
+   3. Define the Staging (staging) and Core (core) schemas
 
  Usage:
    Execute this script in Microsoft SQL Server Management Studio (SSMS)
-   before loading any data or creating tables.
+   before creating any tables or loading data.
 
 **********************************************************************************************/
 
@@ -39,13 +41,10 @@ GO
 USE CovidReporting;
 GO
 
--- Create the bronze layer
-CREATE SCHEMA bronze;
+-- Create the staging layer
+CREATE SCHEMA staging;
 GO
 
--- Create the silver layer
-CREATE SCHEMA silver;
+-- Create the core layer
+CREATE SCHEMA core;
 GO
-
--- Create the gold layer
-CREATE SCHEMA gold;
