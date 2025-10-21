@@ -1,164 +1,133 @@
 /**********************************************************************************************
- File: 03_set_up_core_layer.sql
+ File: 02_set_up_core_layer.sql
  Author: Roberto Chiaiese
  Description:
    This script creates the *Core Layer* tables within the CovidReporting Data Warehouse.
-   The Core Layer acts as an intermediate stage that integrates and organizes 
-   standardized data from the Silver Layer into structured dimensional and fact tables.
-   This layer supports analytical queries and serves as the foundation for the 
-   final Gold Layer aggregations and reports.
+   The Core Layer integrates standardized data from the Staging Layer into a structured
+   dimensional model (Star Schema). This schema supports analytical queries and forms
+   the foundation for the Gold Layer aggregations and Power BI visualizations.
 
-   The schema follows a classic *star schema* design pattern with dimension and fact tables.
+   The design includes both daily- and weekly-granularity fact tables, ensuring flexibility
+   for time-series reporting and trend analysis.
 
  Tables Created:
    • core.dimCountry                   – Stores country-level metadata and population details
-   • core.dimPopulationByAge           – Stores demographic distribution by age group per country
-   • core.dimDate                      – Contains temporal dimensions for time-based analysis
-   • core.factCasesAndDeaths           – Records confirmed cases and deaths per date and country
-   • core.factTesting                  – Contains testing-related metrics such as tests and positivity rate
-   • core.factDailyHospitalAdmissions  – Captures daily hospital and ICU occupancy
-   • core.factWeeklyHospitalAdmissions – Aggregated weekly hospital and ICU occupancy
-
- Usage:
-   Execute this script after the core schema has been created and the Silver Layer is populated.
-   Run in Microsoft SQL Server Management Studio (SSMS) or via an automated pipeline.
-
+   • core.dimDate                      – Provides detailed daily date dimension
+   • core.factCasesAndDeaths           – Records daily confirmed cases and deaths per country
+   • core.factTesting                  – Tracks testing and positivity rates (weekly level)
+   • core.factDailyHospitalAdmissions  – Tracks daily hospital and ICU occupancy data
 **********************************************************************************************/
 
+USE CovidReporting;
+GO
 
--- ============================================
--- Dimension Table: Country
--- Description:
---   Contains reference data for countries including
---   country codes, names, and total population.
--- ============================================
+
+-- ============================================================================================
+-- Dimension Table: dimCountry
+-- --------------------------------------------------------------------------------------------
+-- Stores unique country information and population structure.
+-- Serves as a reference for all country-related attributes used in analytical joins.
+-- ============================================================================================
 DROP TABLE IF EXISTS core.dimCountry;
 CREATE TABLE core.dimCountry(
-	country_key INT,
-	country_name VARCHAR(255),
-	country_code_2 VARCHAR(4),
-	country_code_3 VARCHAR(4),
-	[source] VARCHAR(255),
-	population_total INT,
-	PRIMARY KEY (country_key)
-);
-
-
--- ============================================
--- Dimension Table: Population by Age
--- Description:
---   Stores demographic distribution by age group
---   for each country. Linked to dimCountry.
--- ============================================
-DROP TABLE IF EXISTS core.dimPopulationByAge;
-CREATE TABLE core.dimPopulationByAge(
-	population_age_key INT NOT NULL,
-	country_key INT,
+	country_id VARCHAR(4),
+	country_code VARCHAR(255),
+	country VARCHAR(255),
+	[population] INT,
 	age_0_to_14 FLOAT,
 	age_15_to_24 FLOAT,
 	age_25_to_49 FLOAT,
 	age_50_to_64 FLOAT,
 	age_65_to_79 FLOAT,
 	age_80_to_MAX FLOAT,
-	PRIMARY KEY (population_age_key),
-	FOREIGN KEY (country_key) REFERENCES core.dimCountry(country_key)
+	PRIMARY KEY (country_id)
 );
 
 
--- ============================================
--- Dimension Table: Date
--- Description:
---   Provides temporal reference data for analytics,
---   including full date, year, month, and week details.
--- ============================================
+-- ============================================================================================
+-- Dimension Table: dimDate
+-- --------------------------------------------------------------------------------------------
+-- Provides a detailed calendar dimension with daily granularity.
+-- Enables temporal analysis at multiple levels: day, week, month, and year.
+-- ============================================================================================
 DROP TABLE IF EXISTS core.dimDate;
 CREATE TABLE core.dimDate(
-	date_key INT NOT NULL,
-	full_date DATE,
+	date_id INT NOT NULL,
+	[date] DATE,
 	[year] INT,
 	[month] INT,
 	[day] INT,
+	day_name VARCHAR(255),
+	day_of_year INT,
+	week_of_month INT,
+	week_of_year INT,
+	month_name VARCHAR(255),
+	year_month INT,
 	year_week VARCHAR(10),
-	PRIMARY KEY (date_key)
+	PRIMARY KEY (date_id)
 );
 
 
--- ============================================
--- Fact Table: Cases and Deaths
--- Description:
---   Contains COVID-19 confirmed cases and deaths
---   by country and date. Links to dimCountry and dimDate.
--- ============================================
+-- ============================================================================================
+-- Fact Table: factCasesAndDeaths
+-- --------------------------------------------------------------------------------------------
+-- Stores the daily number of confirmed cases and deaths per country.
+-- Linked to both dimCountry and dimDate via foreign keys.
+-- ============================================================================================
 DROP TABLE IF EXISTS core.factCasesAndDeaths;
 CREATE TABLE core.factCasesAndDeaths(
-	fact_cases_id INT,
-	country_key INT,
-	date_key INT,
+	cases_deaths_id INT,
+	country_id VARCHAR(4),
+	date_id INT,
 	confirmed_cases INT,
-	population_total INT,
-	[source] VARCHAR(255),
-	PRIMARY KEY (fact_cases_id),
-	FOREIGN KEY (country_key) REFERENCES core.dimCountry(country_key),
-	FOREIGN KEY (date_key) REFERENCES core.dimDate(date_key)
+	[source] NVARCHAR(MAX),
+	PRIMARY KEY (cases_deaths_id),
+	FOREIGN KEY (country_id) REFERENCES core.dimCountry(country_id) ON DELETE CASCADE,
+	FOREIGN KEY (date_id) REFERENCES core.dimDate(date_id) ON DELETE CASCADE
 );
 
 
--- ============================================
--- Fact Table: Testing
--- Description:
---   Stores COVID-19 testing data including number of tests,
---   new cases, testing rate, and positivity rate.
--- ============================================
+-- ============================================================================================
+-- Fact Table: factTesting
+-- --------------------------------------------------------------------------------------------
+-- Contains testing data (e.g., tests performed, positivity rate, and new cases).
+-- Uses weekly granularity via year and week_of_year attributes.
+-- date_id can reference the first day of the week in dimDate for consistency.
+-- ============================================================================================
 DROP TABLE IF EXISTS core.factTesting;
 CREATE TABLE core.factTesting(
-	fact_testing_id INT,
-	country_key INT,
-	date_key INT,
+	test_id NVARCHAR(255),
+	country_id VARCHAR(4),
+	date_id INT,
 	new_cases INT,
 	tests_done INT,
 	testing_rate FLOAT,
 	positivity_rate FLOAT,
-	[source] VARCHAR(255)
+	[year] INT,
+	week_of_year INT,
+	year_week INT,
+	[source] NVARCHAR(MAX),
+	PRIMARY KEY (test_id),
+	FOREIGN KEY (country_id) REFERENCES core.dimCountry(country_id) ON DELETE CASCADE,
+	FOREIGN KEY (date_id) REFERENCES core.dimDate(date_id) ON DELETE CASCADE
 );
 
 
--- ============================================
--- Fact Table: Daily Hospital Admissions
--- Description:
---   Tracks daily hospital and ICU occupancy per country.
---   Supports short-term trend and capacity analysis.
--- ============================================
+-- ============================================================================================
+-- Fact Table: factDailyHospitalAdmissions
+-- --------------------------------------------------------------------------------------------
+-- Records daily hospital and ICU occupancy counts for each country.
+-- Enables correlation analysis between hospitalization and infection trends.
+-- ============================================================================================
 DROP TABLE IF EXISTS core.factDailyHospitalAdmissions;
 CREATE TABLE core.factDailyHospitalAdmissions(
 	fact_daily_hosp_id INT,
-	country_key INT,
-	date_key INT,
+	country_id VARCHAR(4),
+	date_id INT,
 	icu_occupancy INT,
 	hosp_occupancy INT,
-	population_total INT,
-	[source] VARCHAR(255),
+	[source] NVARCHAR(MAX),
 	PRIMARY KEY (fact_daily_hosp_id),
-	FOREIGN KEY (country_key) REFERENCES core.dimCountry(country_key),
-	FOREIGN KEY (date_key) REFERENCES core.dimDate(date_key)
-);
-
-
--- ============================================
--- Fact Table: Weekly Hospital Admissions
--- Description:
---   Aggregated weekly view of hospital and ICU occupancy.
---   Used for monitoring medium-term healthcare trends.
--- ============================================
-DROP TABLE IF EXISTS core.factWeeklyHospitalAdmissions;
-CREATE TABLE core.factWeeklyHospitalAdmissions(
-	fact_weekly_hosp_id INT,
-	country_key INT,
-	date_key INT,
-	icu_occupancy INT,
-	hosp_occupancy INT,
-	population_total INT,
-	[source] VARCHAR(255),
-	PRIMARY KEY (fact_weekly_hosp_id),
-	FOREIGN KEY (country_key) REFERENCES core.dimCountry(country_key),
-	FOREIGN KEY (date_key) REFERENCES core.dimDate(date_key)
+	FOREIGN KEY (country_id) REFERENCES core.dimCountry(country_id) ON DELETE CASCADE,
+	FOREIGN KEY (date_id) REFERENCES core.dimDate(date_id) ON DELETE CASCADE
 );
