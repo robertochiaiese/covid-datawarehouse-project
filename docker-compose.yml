@@ -2,18 +2,19 @@ version: '3.8'
 
 services:
   db:
-    container_name: postgres_container
+    container_name: postgresdb
     image: postgres:latest
     environment:
        POSTGRES_USER: 'postgres'
-
        POSTGRES_PASSWORD: 'mysecretpassword'
        POSTGRES_DB: 'CovidReporting'
-    ports: 
-    - 5431:5432
     restart: always
+    ports:
+    - 5500:5432
     volumes:
-    - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+    - dock-db-etl
 
 
 
@@ -25,10 +26,20 @@ services:
     depends_on:
       - db
     environment:
-      DB_HOST: 'localhost'
-      DB_PORT: '5432'
+      DB_HOST: 'postgres_container'
+      DB_PORT: 5432
       DB_NAME: 'covidReporting'
       DB_USER: 'postgres'
       DB_PASSWORD: 'mysecretpassword'
     volumes:
-      - ./scripts:/app/scripts
+      - ./scripts:/scripts
+    command: >
+      sh -c "
+        echo 'Waiting for db to be ready...' &&
+        until pg_isready -h db -p 5432 -U postgres; do sleep 2; done &&
+        echo 'DB is ready! Running ETL...' &&
+        python ./scripts/etl_process.py
+      "
+
+
+
