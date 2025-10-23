@@ -20,6 +20,7 @@ from io import StringIO
 import psycopg2
 import numpy as np
 from sqlalchemy import create_engine
+import os
 
 
 # ---------- GLOBAL CONFIGURATION ----------
@@ -36,11 +37,11 @@ datasets = [
 ]
 
 # PostgreSQL connection credentials
-username = 'postgres'
-password = 'mysecretpassword'
-ipaddress = 'localhost'
-port = '5431'
-dbname = 'CovidReporting'
+username = os.getenv('DB_USERNAME', 'postgres')
+password = os.getenv('DB_PASSWORD', 'mysecretpassword')
+ipaddress = os.getenv('DB_HOST', 'db')
+port = os.getenv('DB_PORT', '5432')
+dbname = os.getenv('DB_NAME', 'CovidReporting')
 
 # SQLAlchemy connection string for PostgreSQL
 postgres_str = f'postgresql+psycopg2://{username}:{password}@{ipaddress}:{port}/{dbname}'
