@@ -25,15 +25,15 @@ import os
 
 # ---------- GLOBAL CONFIGURATION ----------
 # Base URL of the GitHub repository containing datasets
-base_url = 'https://raw.githubusercontent.com/robertochiaiese/datawarehouse/main/dataset/'
+base_url = 'https://raw.githubusercontent.com/robertochiaiese/covid-datawarehouse-project/refs/heads/main/datasets/'
 
 # List of datasets to process (relative paths from base_url)
 datasets = [
-    'ecdc-data/cases_deaths.csv',
-    'ecdc-data/hospital_admissions.csv',
-    'ecdc-data/testing.csv',
-    'ecdc-data/population_by_age.csv',
-    'lookup/dim_date.csv'
+    'raw/cases_deaths.csv',
+    'raw/hospital_admissions.csv',
+    'raw/testing.csv',
+    'raw/population_by_age.csv',
+    'raw/lookup/dim_date.csv'
 ]
 
 # PostgreSQL connection credentials
@@ -52,14 +52,14 @@ postgres_str = f'postgresql+psycopg2://{username}:{password}@{ipaddress}:{port}/
 # These are used for joining country and date information
 country_lookup = pd.read_csv(
     StringIO(requests.get(
-        'https://raw.githubusercontent.com/robertochiaiese/covid-datawarehouse-project/refs/heads/main/dataset/lookup/country_lookup.csv'
+        'https://raw.githubusercontent.com/robertochiaiese/covid-datawarehouse-project/refs/heads/main/datasets/raw/lookup/country_lookup.csv'
     ).text),
     encoding='utf-8'
 )
 
 dimDate = pd.read_csv(
     StringIO(requests.get(
-        'https://raw.githubusercontent.com/robertochiaiese/covid-datawarehouse-project/refs/heads/main/dataset/lookup/dim_date.csv'
+        'https://raw.githubusercontent.com/robertochiaiese/covid-datawarehouse-project/refs/heads/main/datasets/raw/lookup/dim_date.csv'
     ).text),
     encoding='utf-8'
 )
@@ -287,7 +287,8 @@ conn, cur, cnx = postgres_connection()
 for d, f, n in zip(datasets, list_function, list_core_names):
     # --- Extraction ---
     s = ingest_data(d)
-    tbname = d.split('/')[1].split('.')[0]
+    split = d.split('/')
+    tbname = split[len(split)-1].split('.')[0]
 
     # --- Load into Staging Layer ---
     print(f'Loading: {tbname} into staging layer...')
