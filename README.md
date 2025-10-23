@@ -73,7 +73,7 @@ docker-compose up --build
   psql -h localhost -p 5500 -U postgres -d CovidReporting
   ```
 
-# COVID-19 Data Warehouse - ETL Process & Analytics
+
 
 ## 🔧 ETL Process Details
 
