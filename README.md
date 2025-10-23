@@ -58,11 +58,19 @@ Raw Data Sources → ETL Process → Staging Layer → Core Layer → Analytics 
 ### Installation & Execution
 
 1. **Clone the repository**
-  
+  ```console
   docker-compose up --build
+  ```
 
-  Access the database
+  
+2. Run the complete pipeline
+```console
+docker-compose up --build
+  ```
 
-bash
-psql -h localhost -p 5500 -U postgres -d CovidReporting
+3.  **Access the database**
+  ```console
+  psql -h localhost -p 5500 -U postgres -d CovidReporting
+  ```
+
 
