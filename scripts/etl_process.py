@@ -301,7 +301,7 @@ for d, f, n in zip(datasets, list_function, list_core_names):
     print(f'Loading completed!')
 
     # --- Transformation ---
-    print(f'⚙️  Transforming {tbname} → {n}...')
+    print(f'Transforming {tbname} → {n}...')
     c, primary_key = f(s)
     print(f'Transformation completed!')
 
