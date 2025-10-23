@@ -1,0 +1,6 @@
+pandas
+requests
+io
+import psycopg2-binary
+numpy
+sqlalchemy 
