@@ -73,4 +73,109 @@ docker-compose up --build
   psql -h localhost -p 5500 -U postgres -d CovidReporting
   ```
 
+# COVID-19 Data Warehouse - ETL Process & Analytics
+
+## 🔧 ETL Process Details
+
+### Data Extraction
+The ETL process downloads datasets from GitHub repositories and supports multiple data sources:
+
+- **Cases and deaths data** - Daily COVID-19 case and mortality statistics
+- **Hospital admissions** - Healthcare facility occupancy and admission rates
+- **Testing statistics** - PCR and antigen testing volumes and results
+- **Population demographics** - Country-level population and age distribution data
+- **Date and country lookup tables** - Reference data for dimensional modeling
+
+### Data Transformation
+
+#### Data Cleaning
+- Handling missing values and data quality issues
+- Data type conversions and standardization
+- Validation of data integrity and consistency
+
+#### Data Integration
+- Merging multiple datasets using country codes as foreign keys
+- Temporal alignment using date dimensions
+- Consolidation of disparate data sources into unified schema
+
+#### Data Enrichment
+- Adding calculated fields and derived metrics
+- Statistical aggregations and rolling averages
+- Geographic and demographic enhancements
+
+#### Dimensional Modeling
+- Transformation into star schema format
+- Creation of fact and dimension tables
+- Optimization for analytical query performance
+
+### Key Transformations
+
+#### Cases and Deaths
+- Filters European countries for regional analysis
+- Merges with country and date dimensions for contextual analysis
+- Creates comprehensive fact table for confirmed cases and mortality
+
+#### Hospital Admissions
+- Pivots daily hospital and ICU occupancy data for time-series analysis
+- Handles data quality issues and missing values through imputation
+- Standardizes healthcare metrics across different reporting formats
+
+#### Testing Data
+- Aggregates weekly testing statistics for trend analysis
+- Calculates testing rates per capita and population coverage
+- Computes positivity rates as key pandemic indicators
+
+#### Population Data
+- Creates comprehensive country dimension with detailed demographics
+- Calculates mean population values across multiple years for stability
+- Structures age distribution data for cohort analysis
+
+## 📊 Analytics Features
+
+The data warehouse enables comprehensive analysis of COVID-19 impacts:
+
+### Trend Analysis
+- COVID-19 case trends over time with seasonal patterns
+- Mortality rate progression and peak identification
+- Vaccination impact on case trajectories
+
+### Geographic Analysis
+- Country-wise comparison of infection rates and outcomes
+- Regional hotspot identification and spread patterns
+- Cross-border transmission analysis
+
+### Healthcare Impact
+- Hospital and ICU occupancy rates and capacity planning
+- Healthcare system stress indicators and resource allocation
+- Patient outcome correlations with healthcare metrics
+
+### Testing Effectiveness
+- Positivity rates as pandemic severity indicators
+- Testing coverage and accessibility analysis
+- Correlation between testing volumes and case detection
+
+### Demographic Insights
+- Age distribution impact on infection rates and outcomes
+- Vulnerable population identification and protection strategies
+- Intergenerational transmission patterns
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **European Centre for Disease Prevention and Control (ECDC)** for providing comprehensive COVID-19 data
+- **PostgreSQL community** for robust database management system
+- **Docker community** for containerization and deployment solutions
+- **Pandas and Python data ecosystem** for powerful data processing capabilities
+
+## 📞 Support
+
+For support, please open an issue in the GitHub repository or contact the maintainers.
+
+---
+
+**Built for data-driven pandemic response and public health insights**
+
 
