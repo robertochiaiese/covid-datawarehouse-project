@@ -20,21 +20,35 @@ Raw Data Sources → ETL Process → Staging Layer → Core Layer → Analytics 
 
 ## 📁 Project Structure
 ```tree
-├── docker-compose.yml
+covid-datawarehouse-project/
+├── README.md
+├── requirements.txt
 ├── Dockerfile
+├── docker-compose.yml
+│
 ├── scripts/
-│ ├── etl_process.py
-│ └── init_db.sql
-├── dataset/
-│ ├── ecdc-data/
-│ │ ├── cases_deaths.csv
-│ │ ├── hospital_admissions.csv
-│ │ ├── testing.csv
-│ │ └── population_by_age.csv
-│ └── lookup/
-│ ├── dim_date.csv
-│ └── country_lookup.csv
-└── README.md
+│   ├── init_db.sql
+│   └── etl_process.py
+│
+└── datasets/
+    ├── raw/
+    │   ├── cases_deaths.csv
+    │   ├── hospital_admissions.csv
+    │   ├── testing.csv
+    │   └── population_by_age.csv
+    │
+    ├── lookup/
+    │   ├── dim_date.csv
+    │   └── country_lookup.csv
+    │
+    └── processed/
+        ├── dim_country.csv
+        ├── dim_date.csv
+        ├── factCasesAndDeaths.csv
+        ├── fact_daily_hospital_admissions.csv
+        └── fact_testing.csv
+         
+
 ```
 
 
