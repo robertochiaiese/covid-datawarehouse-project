@@ -19,6 +19,7 @@ This project constructs a robust data warehouse for COVID-19 data analysis throu
 Raw Data Sources → ETL Process → Staging Layer → Core Layer → Analytics & Reporting
 
 ## 📁 Project Structure
+```tree
 ├── docker-compose.yml
 ├── Dockerfile
 ├── scripts/
@@ -34,6 +35,7 @@ Raw Data Sources → ETL Process → Staging Layer → Core Layer → Analytics 
 │ ├── dim_date.csv
 │ └── country_lookup.csv
 └── README.md
+```
 
 
 ## 🗃️ Data Model
