@@ -1,5 +1,5 @@
 # -----------------------------------------------
-# 📦 ETL Pipeline for COVID Data Warehouse Project
+#  ETL Pipeline for COVID Data Warehouse Project
 # -----------------------------------------------
 # Author: Roberto Chiaiese
 # Description:
