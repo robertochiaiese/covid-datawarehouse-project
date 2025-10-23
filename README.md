@@ -142,34 +142,7 @@ The ETL process downloads datasets from GitHub repositories and supports multipl
 - Calculates mean population values across multiple years for stability
 - Structures age distribution data for cohort analysis
 
-## 📊 Analytics Features
 
-The data warehouse enables comprehensive analysis of COVID-19 impacts:
-
-### Trend Analysis
-- COVID-19 case trends over time with seasonal patterns
-- Mortality rate progression and peak identification
-- Vaccination impact on case trajectories
-
-### Geographic Analysis
-- Country-wise comparison of infection rates and outcomes
-- Regional hotspot identification and spread patterns
-- Cross-border transmission analysis
-
-### Healthcare Impact
-- Hospital and ICU occupancy rates and capacity planning
-- Healthcare system stress indicators and resource allocation
-- Patient outcome correlations with healthcare metrics
-
-### Testing Effectiveness
-- Positivity rates as pandemic severity indicators
-- Testing coverage and accessibility analysis
-- Correlation between testing volumes and case detection
-
-### Demographic Insights
-- Age distribution impact on infection rates and outcomes
-- Vulnerable population identification and protection strategies
-- Intergenerational transmission patterns
 
 ## 📝 License
 
