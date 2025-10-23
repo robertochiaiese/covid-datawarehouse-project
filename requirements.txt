@@ -1,6 +1,5 @@
 pandas
 requests
-io
 psycopg2-binary
 numpy
 sqlalchemy 
