@@ -163,12 +163,6 @@ The data warehouse enables comprehensive analysis of COVID-19 impacts:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
-
-- **European Centre for Disease Prevention and Control (ECDC)** for providing comprehensive COVID-19 data
-- **PostgreSQL community** for robust database management system
-- **Docker community** for containerization and deployment solutions
-- **Pandas and Python data ecosystem** for powerful data processing capabilities
 
 ## 📞 Support
 
@@ -176,6 +170,6 @@ For support, please open an issue in the GitHub repository or contact the mainta
 
 ---
 
-**Built for data-driven pandemic response and public health insights**
+
 
 
