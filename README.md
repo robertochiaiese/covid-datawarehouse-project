@@ -25,22 +25,18 @@ covid-datawarehouse-project/
 ├── requirements.txt
 ├── Dockerfile
 ├── docker-compose.yml
-│
 ├── scripts/
 │   ├── init_db.sql
 │   └── etl_process.py
-│
 └── datasets/
     ├── raw/
+    │   ├── lookup/
+    │   │   ├── dim_date.csv
+    │   │   └── country_lookup.csv
     │   ├── cases_deaths.csv
     │   ├── hospital_admissions.csv
     │   ├── testing.csv
     │   └── population_by_age.csv
-    │
-    ├── lookup/
-    │   ├── dim_date.csv
-    │   └── country_lookup.csv
-    │
     └── processed/
         ├── dim_country.csv
         ├── dim_date.csv
