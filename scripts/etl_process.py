@@ -37,7 +37,7 @@ datasets = [
 ]
 
 # PostgreSQL connection credentials
-username = os.getenv('DB_USERNAME', 'postgres')
+username = os.getenv('DB_USER', 'postgres')
 password = os.getenv('DB_PASSWORD', 'mysecretpassword')
 ipaddress = os.getenv('DB_HOST', 'db')
 port = os.getenv('DB_PORT', '5432')
