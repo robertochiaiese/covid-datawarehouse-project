@@ -22,7 +22,7 @@ Description:
 CREATE DATABASE covidreporting;
 
 -- Connect to the database (in psql)
-\c covidreporting
+--\c covidreporting
 
 -- Create schemas
 CREATE SCHEMA IF NOT EXISTS staging;
