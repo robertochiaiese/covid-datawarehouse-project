@@ -33,14 +33,14 @@ covid-datawarehouse-project/
     │   ├── lookup/
     │   │   ├── dim_date.csv
     │   │   └── country_lookup.csv
-    │   ├── cases_deaths.csv
+    │   ├── cases_and_deaths.csv
     │   ├── hospital_admissions.csv
     │   ├── testing.csv
     │   └── population_by_age.csv
     └── processed/
         ├── dim_country.csv
         ├── dim_date.csv
-        ├── factCasesAndDeaths.csv
+        ├── fact_cases_and_deaths.csv
         ├── fact_daily_hospital_admissions.csv
         └── fact_testing.csv
          
