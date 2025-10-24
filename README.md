@@ -18,6 +18,9 @@ This project constructs a robust data warehouse for COVID-19 data analysis throu
 ### Data Pipeline Architecture
 Raw Data Sources → ETL Process → Staging Layer → Core Layer → Analytics & Reporting
 
+<img width="597" height="370" alt="workflow" src="https://github.com/user-attachments/assets/6dbe2ae5-0881-408f-8bb0-9df961d6b875" />
+
+
 ## 📁 Project Structure
 ```tree
 covid-datawarehouse-project/
